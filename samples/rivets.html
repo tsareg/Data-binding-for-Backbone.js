@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Rivets.js Sample</title>
+    <script src="../bower_components/jquery/dist/jquery.js"></script>
+    <script src="../bower_components/underscore/underscore.js"></script>
+    <script src="../bower_components/backbone/backbone.js"></script>
+    <script src="../bower_components/rivets/dist/rivets.bundled.min.js"></script>
+    <script type="text/template">
+        <p>First Name: <input type="text" rv-value="model:firstName"/></p>
+        <p>Last Name: <input type="text" rv-value="model:lastName"/></p>
+        <p>Full Name: <span rv-text="view.fullName < model:firstName model:lastName"></span></p>
+    </script>
+</head>
+<body>
+    <div id="container"></div>
+
+    <script>
+        rivets.adapters[':'] = {
+            observe: function(obj, keypath, callback) {
+                obj.on('change:' + keypath, callback)
+            },
+            unobserve: function(obj, keypath, callback) {
+                obj.off('change:' + keypath, callback)
+            },
+            get: function(obj, keypath) {
+                return obj.get(keypath)
+            },
+            set: function(obj, keypath, value) {
+                obj.set(keypath, value)
+            }
+        };
+
+        var RivetsView = Backbone.View.extend({
+            template: $("script[type='text/template']").html(),
+
+            fullName: function() {
+                return this.model.get("firstName") + " " + this.model.get("lastName");
+            },
+
+            render: function () {
+                this.$el.html(this.template);
+
+                rivets.bind(this.$el, {model: this.model, view: this});
+
+                return this;
+            }
+        });
+
+        var model = new Backbone.Model({firstName: "Luke", lastName: "Skywalker"}),
+            view = new RivetsView({model: model, el: $("#container")});
+
+        view.render();
+    </script>
+</body>
+</html>

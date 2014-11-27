@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Vanilla Backbone Sample</title>
+    <script src="../bower_components/jquery/dist/jquery.js"></script>
+    <script src="../bower_components/underscore/underscore.js"></script>
+    <script src="../bower_components/backbone/backbone.js"></script>
+    <script type="text/template">
+        <p>First Name: <input type="text" id="firstName" value="<%- firstName %>"/></p>
+        <p>Last Name: <input type="text" id="lastName" value="<%- lastName %>"/></p>
+        <p>Full Name: <%- firstName %> <%- lastName %></p>
+    </script>
+</head>
+<body>
+    <div id="container"></div>
+
+    <script>
+        var FullNameView = Backbone.View.extend({
+            template: _.template($("script[type='text/template']").html()),
+
+            events: {
+                "change #firstName": "updateFirstName",
+                "change #lastName": "updateLastName"
+            },
+
+            initialize: function () {
+                this.listenTo(this.model, "change:firstName change:lastName", this.render);
+            },
+
+            render: function () {
+                this.$el.html(this.template(model.toJSON()));
+
+                return this;
+            },
+
+            updateFirstName: function () {
+                this.model.set("firstName", this.$("#firstName").val());
+            },
+
+            updateLastName: function () {
+                this.model.set("lastName", this.$("#lastName").val());
+            }
+        });
+
+        var model = new Backbone.Model({firstName: "Luke", lastName: "Skywalker"}),
+            view = new FullNameView({model: model, el: $("#container")});
+
+        view.render();
+    </script>
+</body>
+</html>

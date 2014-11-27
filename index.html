@@ -39,11 +39,6 @@
         <script src="bower_components/jquery/dist/jquery.js"></script>
         <script src="bower_components/underscore/underscore.js"></script>
         <script src="bower_components/backbone/backbone.js"></script>
-        <!--<script src="bower_components/backbone.modelbinding/backbone.modelbinding.js"></script>-->
-        <!--<script src="bower_components/backbone.modelbinder/Backbone.ModelBinder.js"></script>-->
-        <!--<script src="bower_components/backbone.databinding/dist/backbone.databinding.js"></script>-->
-        <!--<script src="bower_components/backbone.stickit/backbone.stickit.js"></script>-->
-        <script src="bower_components/backbone.epoxy/backbone.epoxy.js"></script>
     </head>
 
 	<body>
@@ -105,70 +100,79 @@
                             }
                         });
 
-//                        var model = new Backbone.Model({ firstName: "", lastName: "" }),
-//                            view = new FullNameView({ model: model, el: $("#task") });
-//
-//                        view.render();
+                        var model = new Backbone.Model({ firstName: "", lastName: "" }),
+                            view = new FullNameView({ model: model, el: $("#task") });
+
+                        view.render();
 
                         $("#setFirstAndLastNames").on("click", function() {
                             model.set({
-                                "firstName": "Константин",
-                                "lastName": "Цареградский"
+                                "firstName": "Luke",
+                                "lastName": "Skywalker"
                             });
                         });
                     </script>
                 </section>
 
 				<section style="top: -450px !important;">
-                    <p>Вот что у нас примерно получиться на чистом Backbone...</p>
-                    <pre>
-<code data-trim contenteditable class="javascript" style="max-height: 800px; font-size: 16px;">
+                    <h2>Vanilla Backbone.js</h2>
+                    <p>Source code: Template</p>
+                    <pre><code class="html" data-trim contenteditable style="font-size: 16px;">
+<p>First Name: <input type="text" id="firstName" value="<%- firstName %>"/></p>
+<p>Last Name: <input type="text" id="lastName" value="<%- lastName %>"/></p>
+<p>Full Name: <%- firstName %> <%- lastName %></p></code></pre>
+                    <p>Source code: View and Model</p>
+                    <pre><code data-trim contenteditable class="javascript" style="max-height: 800px; font-size: 16px;">
 var FullNameView = Backbone.View.extend({
-    template: _.template(
-        '<p>First Name: <input type="text" id="firstName" value="<%- firstName %>"/></p>' +
-        '<p>Last Name: <input type="text" id="lastName" value="<%- lastName %>"/></p>' +
-        '<p>Full Name: <span id="fullName"><%- firstName %> <%- lastName %></span></p>'),
-
+    template: _.template($("script[type='text/template']").html()),
     events: {
         "change #firstName": "updateFirstName",
         "change #lastName": "updateLastName"
     },
-
-    initialize: function() {
+    initialize: function () {
         this.listenTo(this.model, "change:firstName change:lastName", this.render);
     },
-
-    render: function() {
+    render: function () {
         this.$el.html(this.template(model.toJSON()));
-
         return this;
     },
-
-    updateFirstName: function() {
+    updateFirstName: function () {
         this.model.set("firstName", this.$("#firstName").val());
     },
-
-    updateLastName: function() {
+    updateLastName: function () {
         this.model.set("lastName", this.$("#lastName").val());
     }
 });
 
-var model = new Backbone.Model({ firstName: "", lastName: "" }),
-    view = new FullNameView({ model: model, el: $("#task") });
+var model = new Backbone.Model({firstName: "Luke", lastName: "Skywalker"}),
+    view = new FullNameView({model: model, el: $("#container")});
 
 view.render();</code></pre>
 
 				</section>
 
-
-				<section>
-					<h2>Результат:</h2>
-                    <ul>
-                        <li>Много кода для такой простой задачи</li>
-                        <li>Ре-рендеринг всей вьюхи каждый раз</li>
-                        <li>Нужно как-то идентефицировать эелементы в DOM</li>
-                    </ul>
-				</section>
+                <section class="fragment">
+                    <h2>Vanilla Backbone.js</h2>
+                    <table class="plusesAndMinusesTable">
+                        <thead>
+                            <tr><th style="text-align: center; border: none;">+</th><th style="text-align: center; border: none;">-</th></tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>
+                                <ul></ul>
+                            </td>
+                            <td style="vertical-align: top;">
+                                <ul>
+                                    <li class="fragment">Много кода для такой простой задачи</li>
+                                    <li class="fragment">Ре-рендеринг всей вьюхи каждый раз</li>
+                                    <li class="fragment">В перспективе - причина создания собственного велосипеда</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </section>
 
 				<section class="fragment">
 					<h3>Есть решение проще!</h3>
@@ -196,7 +200,7 @@ var ViewModel = function(first, last) {
     this.lastName = ko.observable(last);
 };
 
-ko.applyBindings(new ViewModel("Константин", "Цареградский"));</code></pre>
+ko.applyBindings(new ViewModel("Luke", "Skywalker"));</code></pre>
 				</section>
 
 				<section>
@@ -213,8 +217,8 @@ ko.applyBindings(new ViewModel("Константин", "Цареградский
                     <p>Source code: Controller</p>
                     <pre><code class="javascript" data-trim contenteditable>
 function ctrlName($scope) {
-    $scope.firstName = "Константин";
-    $scope.lastName = "Цареградский";
+    $scope.firstName = "Luke";
+    $scope.lastName = "Skywalker";
 }</code></pre>
 				</section>
 
@@ -233,74 +237,48 @@ function ctrlName($scope) {
 
                 <section>
                     <h2>Backbone.ModelBinding</h2>
-                    <table>
-                        <thead>
-                        <tr><th style="text-align: center; border: none;">+</th><th style="text-align: center; border: none;">-</th></tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td><ul><li>По сути, первый data binding для Backbone. Интересен для истории.</li></ul></td>
-                            <td style="vertical-align: top;">
-                                <ul>
-                                    <li>Ограниченое число binding'ов</li>
-                                    <li>Разработка остановлена</li>
-                                    <li>Новые версии Backbone официально не поддерживаются</li>
-                                </ul>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </section>
-
-				<section>
-                   <h2>Backbone.ModelBinding</h2>
-                   <pre><code data-trim contenteditable class="javascript" style="max-height: 800px; font-size: 16px;">
+                    <p>Source code: Template</p>
+                    <pre><code class="html" data-trim contenteditable style="font-size: 16px;">
+<p>First Name: <input type="text" id="firstName"/></p>
+<p>Last Name: <input type="text" id="lastName"/></p>
+<p>Full Name: <span data-bind="text firstName"></span>
+    <span data-bind="text lastName"></span></p></code></pre>
+                    <p>Source code: View and Model</p>
+                    <pre><code data-trim contenteditable class="javascript" style="max-height: 800px; font-size: 16px;">
 var ModelBindingView = Backbone.View.extend({
-    template: '<p>First Name: <input type="text" id="firstName"/></p>' +
-        '<p>Last Name: <input type="text" id="lastName"/></p>' +
-        '<p>Full Name: <span data-bind="text firstName"></span> ' +
-            '<span data-bind="text lastName"></span></p>',
+    template: $("script[type='text/template']").html(),
 
     render: function() {
         this.$el.html(this.template);
         Backbone.ModelBinding.bind(this);
         return this;
-    },
-
-    remove: function() {
-        Backbone.ModelBinding.unbind(this);
-        Backbone.View.prototype.remove.call(this);
     }
 });
 
-var model = new Backbone.Model({ firstName: "Костя", lastName: "Цареградский" }),
-    view = new ModelBindingView({ model: model, el: $("#sample") });
+var model = new Backbone.Model({ firstName: "Luke", lastName: "Skywalker" }),
+    view = new ModelBindingView({ model: model, el: $("#container") });
 
 view.render();</code></pre>
 				</section>
 
-                <section>
-                    <h2>Backbone.ModelBinder</h2>
-                    <table>
+                <section class="fragment">
+                    <h2>Backbone.ModelBinding</h2>
+                    <table class="plusesAndMinusesTable">
                         <thead>
-                        <tr>
-                            <th style="text-align: center; border: none;">+</th><th style="text-align: center; border: none;">-</th>
-                        </tr>
+                            <tr><th style="text-align: center; border: none;">+</th><th style="text-align: center; border: none;">-</th></tr>
                         </thead>
                         <tbody>
                         <tr>
-                            <td style="vertical-align: top;">
+                            <td>
                                 <ul>
-                                    <li>Гибкость в настройке</li>
-                                    <li>Есть возможность привязаться к любому аттрибуту DOM элемента</li>
-                                    <li>Поддержка конвертеров и форматтеров</li>
-                                    <li>Поддержка коллекций с помощью Backbone.CollectionBinder</li>
+                                    <li class="fragment">По сути, первый data binding для Backbone. Интересен для истории.</li>
                                 </ul>
                             </td>
                             <td style="vertical-align: top;">
                                 <ul>
-                                    <li>Сложный в освоении из-за большого количества настроек и параметров</li>
-                                    <li>Проект не активен, minor версия 1.0.6 от 5 ноября 2014, до этого коммиты были только в 2013</li>
+                                    <li class="fragment">Ограниченое число binding'ов</li>
+                                    <li class="fragment">Разработка остановлена</li>
+                                    <li class="fragment">Новые версии Backbone официально не поддерживаются</li>
                                 </ul>
                             </td>
                         </tr>
@@ -308,13 +286,17 @@ view.render();</code></pre>
                     </table>
                 </section>
 
-				<section>
+                <section>
 					<h2>Backbone.ModelBinder</h2>
+                    <p>Source code: Template</p>
+                    <pre><code class="html" data-trim contenteditable style="font-size: 16px;">
+<p>First Name: <input type="text" name="firstName"/></p>
+<p>Last Name: <input type="text" name="lastName"/></p>
+<p>Full Name: <span name="firstName"></span> <span name="lastName"></span></p></code></pre>
+                    <p>Source code: View and Model</p>
                     <pre><code data-trim contenteditable class="javascript" style="max-height: 800px; font-size: 16px;">
 var ModelBinderView = Backbone.View.extend({
-    template: '<p>First Name: <input type="text" name="firstName"/></p>' +
-            '<p>Last Name: <input type="text" name="lastName"/></p>' +
-            '<p>Full Name: <span name="firstName"></span> <span name="lastName"></span></p>',
+    template: $("script[type='text/template']").html(),
 
     initialize: function() {
         this.modelBinder = new Backbone.ModelBinder();
@@ -324,23 +306,18 @@ var ModelBinderView = Backbone.View.extend({
         this.$el.html(this.template);
         this.modelBinder.bind(this.model, this.el);
         return this;
-    },
-
-    remove: function() {
-        this.modelBinder.unbind();
-        Backbone.View.prototype.remove.call(this);
     }
 });
 
-var model = new Backbone.Model({ firstName: "Костя", lastName: "Цареградский" }),
-    view = new ModelBinderView({ model: model, el: $("#sample") });
+var model = new Backbone.Model({ firstName: "Luke", lastName: "Skywalker" }),
+    view = new ModelBinderView({ model: model, el: $("#container") });
 
 view.render();</code></pre>
 				</section>
 
-                <section>
-                    <h2>Backbone.DataBinding</h2>
-                    <table>
+                <section class="fragment">
+                    <h2>Backbone.ModelBinder</h2>
+                    <table class="plusesAndMinusesTable">
                         <thead>
                         <tr>
                             <th style="text-align: center; border: none;">+</th><th style="text-align: center; border: none;">-</th>
@@ -350,16 +327,16 @@ view.render();</code></pre>
                         <tr>
                             <td style="vertical-align: top;">
                                 <ul>
-                                    <li>Есть возможность связать модель и представление извне, не трогая оригинальный код</li>
-                                    <li>Поддержка коллекций</li>
-                                    <li>Автор из Украины</li>
+                                    <li class="fragment">Гибкость в настройке</li>
+                                    <li class="fragment">Есть возможность привязаться к любому аттрибуту DOM элемента</li>
+                                    <li class="fragment">Поддержка конвертеров и форматтеров</li>
+                                    <li class="fragment">Поддержка коллекций с помощью Backbone.CollectionBinder</li>
                                 </ul>
                             </td>
                             <td style="vertical-align: top;">
                                 <ul>
-                                    <li>Отсутсвтие какого-либо community - 2 контрибьютора, 0 форков</li>
-                                    <li>Много ручной работы</li>
-                                    <li>Последний коммит - год назад</li>
+                                    <li class="fragment">Сложный в освоении из-за большого количества настроек и параметров</li>
+                                    <li class="fragment">Проект не активен, minor версия 1.0.6 от 5 ноября 2014, до этого коммиты были только в 2013</li>
                                 </ul>
                             </td>
                         </tr>
@@ -369,11 +346,15 @@ view.render();</code></pre>
 
 				<section>
 					<h2>Backbone.DataBinding</h2>
+                    <p>Source code: Template</p>
+                    <pre><code class="html" data-trim contenteditable style="font-size: 16px;">
+<p>First Name: <input type="text" name="firstName"/></p>
+<p>Last Name: <input type="text" name="lastName"/></p>
+<p>Full Name: <span id="firstName"></span> <span id="lastName"></span></p></code></pre>
+                    <p>Source code: View and Model</p>
                     <pre><code data-trim contenteditable class="javascript" style="max-height: 800px; font-size: 16px;">
 var DataBindingView = Backbone.View.extend({
-    template: '<p>First Name: <input type="text" name="firstName"/></p>' +
-            '<p>Last Name: <input type="text" name="lastName"/></p>' +
-            '<p>Full Name: <span id="firstName"></span> <span id="lastName"></span></p>',
+    template: $("script[type='text/template']").html(),
 
     render: function() {
         this.$el.html(this.template);
@@ -381,8 +362,8 @@ var DataBindingView = Backbone.View.extend({
     }
 });
 
-var model = new Backbone.Model({ firstName: "Костя", lastName: "Цареградский" }),
-    view = new DataBindingView({ model: model, el: $("#sample") }),
+var model = new Backbone.Model({ firstName: "Luke", lastName: "Skywalker" }),
+    view = new DataBindingView({ model: model, el: $("#container") }),
     modelBinder = new Backbone.ModelBinder(view, model);
 
 modelBinder.watch('value: firstName', { selector: '[name="firstName"]' });
@@ -393,9 +374,9 @@ modelBinder.watch('text: lastName', { selector: '#lastName' });
 view.render();</code></pre>
 				</section>
 
-                <section>
-                    <h2>Backbone.Stickit</h2>
-                    <table>
+                <section class="fragment">
+                    <h2>Backbone.DataBinding</h2>
+                    <table class="plusesAndMinusesTable">
                         <thead>
                         <tr>
                             <th style="text-align: center; border: none;">+</th><th style="text-align: center; border: none;">-</th>
@@ -405,18 +386,16 @@ view.render();</code></pre>
                         <tr>
                             <td style="vertical-align: top;">
                                 <ul>
-                                    <li>Активно развивается, последний коммит - в начале ноября 2014</li>
-                                    <li>Большое community, серьезный автор - NY Times</li>
-                                    <li>Поддержка contenteditable DOM эелментов</li>
-                                    <li>Computed свойства</li>
-                                    <li>Огромное количество настроек</li>
-                                    <li>Возможность форматирования и конвертирования</li>
+                                    <li class="fragment">Есть возможность связать модель и представление извне, не трогая оригинальный код</li>
+                                    <li class="fragment">Поддержка коллекций</li>
+                                    <li class="fragment">Автор из Украины</li>
                                 </ul>
                             </td>
                             <td style="vertical-align: top;">
                                 <ul>
-                                    <li>Data binding описывается в JavaScript коде, нет привязки к темплейтам</li>
-                                    <li>Доволен сложен в освоении и, как следствие, возможно, overkill для простых задач</li>
+                                    <li class="fragment">Отсутсвтие какого-либо community - 2 контрибьютора, 0 форков</li>
+                                    <li class="fragment">Много ручной работы</li>
+                                    <li class="fragment">Последний коммит - год назад</li>
                                 </ul>
                             </td>
                         </tr>
@@ -426,24 +405,23 @@ view.render();</code></pre>
 
                 <section>
                     <h2>Backbone.Stickit</h2>
+                    <p>Source code: Template</p>
+                    <pre><code class="html" data-trim contenteditable style="font-size: 16px;">
+<p>First Name: <input type="text" name="firstName"/></p>
+<p>Last Name: <input type="text" name="lastName"/></p>
+<p>Full Name: <span id="fullName"></span></p></code></pre>
+                    <p>Source code: View and Model</p>
                     <pre><code data-trim contenteditable class="javascript" style="max-height: 800px; font-size: 16px;">
 var StickitView = Backbone.View.extend({
-    template:
-        '<p>First Name: <input type="text" name="firstName"/></p>' +
-        '<p>Last Name: <input type="text" name="lastName"/></p>' +
-        '<p>Full Name: <span id="fullName"></span></p>',
-
+    template: $("script[type='text/template']").html(),
     bindings: {
         '[name=firstName]': 'firstName',
         '[name=lastName]': 'lastName',
         '#fullName': {
             observe: ['firstName', 'lastName'],
-            onGet: function(values) {
-                return values[0] + ' ' + values[1];
-            }
+            onGet: function(values) { return values[0] + ' ' + values[1]; }
         }
     },
-
     render: function() {
         this.$el.html(this.template);
         this.stickit();
@@ -451,15 +429,15 @@ var StickitView = Backbone.View.extend({
     }
 });
 
-var model = new Backbone.Model({ firstName: "Костя", lastName: "Цареградский" }),
-    view = new StickitView({ model: model, el: $("#sample") });
+var model = new Backbone.Model({ firstName: "Luke", lastName: "Skywalker" }),
+    view = new StickitView({ model: model, el: $("#container") });
 
 view.render();</code></pre>
                 </section>
 
-                <section>
-                    <h2>Epoxy.js</h2>
-                    <table>
+                <section class="fragment">
+                    <h2>Backbone.Stickit</h2>
+                    <table class="plusesAndMinusesTable">
                         <thead>
                         <tr>
                             <th style="text-align: center; border: none;">+</th><th style="text-align: center; border: none;">-</th>
@@ -469,17 +447,18 @@ view.render();</code></pre>
                         <tr>
                             <td style="vertical-align: top;">
                                 <ul>
-                                    <li>Активно развивается, последний коммит - 7 дней назад</li>
-                                    <li>Computed свойства как в модели, так и во view</li>
-                                    <li>Декларировать binding'и можно как во view, так и в темплейтах</li>
-                                    <li>Возможность форматирования и конвертирования</li>
-                                    <li>Поддержка коллекций</li>
-                                    <li>Простота создания кастомных binding'ов</li>
+                                    <li class="fragment">Активно развивается, последний коммит - в начале ноября 2014</li>
+                                    <li class="fragment">Большое community, серьезный автор - NY Times</li>
+                                    <li class="fragment">Поддержка contenteditable DOM эелментов</li>
+                                    <li class="fragment">Computed свойства</li>
+                                    <li class="fragment">Огромное количество настроек</li>
+                                    <li class="fragment">Возможность форматирования и конвертирования</li>
                                 </ul>
                             </td>
                             <td style="vertical-align: top;">
                                 <ul>
-                                    <li>Нужно обязательно наследоваться от Backbone.Epoxy.View. Если нужна поддержка computed свойств в модели то нужно наследоваться от Backbone.Epoxy.Model</li>
+                                    <li class="fragment">Data binding описывается в JavaScript коде, нет привязки к темплейтам</li>
+                                    <li class="fragment">Доволен сложен в освоении и, как следствие, возможно, overkill для простых задач</li>
                                 </ul>
                             </td>
                         </tr>
@@ -489,12 +468,15 @@ view.render();</code></pre>
 
 				<section>
 					<h2>Epoxy.js</h2>
+                    <p>Source code: Template</p>
+                    <pre><code class="html" data-trim contenteditable style="font-size: 16px;">
+<p>First Name: <input type="text" data-bind="value:firstName,events:['keyup']"/></p>
+<p>Last Name: <input type="text" data-bind="value:lastName,events:['keyup']"/></p>
+<p>Full Name: <span data-bind="html:fullNameDisplay"></span></p></code></pre>
+                    <p>Source code: View and Model</p>
                     <pre><code contenteditable data-trim class="javascript" style="max-height: 800px; font-size: 16px;">
 var EpoxyView = Backbone.Epoxy.View.extend({
-    template:
-        '<p>First Name:<input type="text" data-bind="value:firstName,events:[\'keyup\']"/></p>'+
-        '<p>Last Name:<input type="text" data-bind="value:lastName,events:[\'keyup\']"/></p>'+
-        '<p>Full Name:<span data-bind="html:fullNameDisplay"></span></p>',
+    template: $("script[type='text/template']").html(),
 
     computeds: {
         fullNameDisplay: function() {
@@ -509,154 +491,174 @@ var EpoxyView = Backbone.Epoxy.View.extend({
     }
 });
 
-var model = new Backbone.Model({ firstName: "Костя", lastName: "Цареградский" }),
-    view = new EpoxyView({ model: model, el: $("#sample") });
+var model = new Backbone.Model({ firstName: "Luke", lastName: "Skywalker" }),
+    view = new EpoxyView({ model: model, el: $("#container") });
 
 view.render();</code></pre>
 				</section>
 
-				<section>
-					<section data-background="#007777">
-						<h2>Slide Backgrounds</h2>
-						<p>
-							Set <code>data-background="#007777"</code> on a slide to change the full page background to the given color. All CSS color formats are supported.
-						</p>
-						<a href="#" class="image navigate-down">
-							<img width="178" height="238" src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" alt="Down arrow">
-						</a>
-					</section>
-					<section data-background="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png">
-						<h2>Image Backgrounds</h2>
-						<pre><code>&lt;section data-background="image.png"&gt;</code></pre>
-					</section>
-					<section data-background="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" data-background-repeat="repeat" data-background-size="100px">
-						<h2>Repeated Image Backgrounds</h2>
-						<pre><code style="word-wrap: break-word;">&lt;section data-background="image.png" data-background-repeat="repeat" data-background-size="100px"&gt;</code></pre>
-					</section>
-				</section>
+                <section class="fragment">
+                    <h2>Epoxy.js</h2>
+                    <table class="plusesAndMinusesTable">
+                        <thead>
+                        <tr>
+                            <th style="text-align: center; border: none;">+</th><th style="text-align: center; border: none;">-</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td style="vertical-align: top;">
+                                <ul>
+                                    <li class="fragment">Активно развивается, последний коммит - 7 дней назад</li>
+                                    <li class="fragment">Computed свойства как в модели, так и во view</li>
+                                    <li class="fragment">Декларировать binding'и можно как во view, так и в темплейтах</li>
+                                    <li class="fragment">Возможность форматирования и конвертирования</li>
+                                    <li class="fragment">Поддержка коллекций</li>
+                                    <li class="fragment">Простота создания кастомных binding'ов</li>
+                                </ul>
+                            </td>
+                            <td style="vertical-align: top;">
+                                <ul>
+                                    <li class="fragment">Нужно обязательно наследоваться от Backbone.Epoxy.View. Если нужна поддержка computed свойств в модели то нужно наследоваться от Backbone.Epoxy.Model</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </section>
 
-				<section data-transition="linear" data-background="#4d7e65" data-background-transition="slide">
-					<h2>Background Transitions</h2>
-					<p>
-						Pass reveal.js the <code>backgroundTransition: 'slide'</code> config argument to make backgrounds slide rather than fade.
-					</p>
-				</section>
-
-				<section data-transition="linear" data-background="#8c4738" data-background-transition="slide">
-					<h2>Background Transition Override</h2>
-					<p>
-						You can override background transitions per slide by using <code>data-background-transition="slide"</code>.
-					</p>
-				</section>
-
-				<section>
-					<h2>Clever Quotes</h2>
-					<p>
-						These guys come in two forms, inline: <q cite="http://searchservervirtualization.techtarget.com/definition/Our-Favorite-Technology-Quotations">
-						&ldquo;The nice thing about standards is that there are so many to choose from&rdquo;</q> and block:
-					</p>
-					<blockquote cite="http://searchservervirtualization.techtarget.com/definition/Our-Favorite-Technology-Quotations">
-						&ldquo;For years there has been a theory that millions of monkeys typing at random on millions of typewriters would
-						reproduce the entire works of Shakespeare. The Internet has proven this theory to be untrue.&rdquo;
-					</blockquote>
-				</section>
-
-				<section>
-					<h2>Pretty Code</h2>
-					<pre><code data-trim contenteditable>
-function linkify( selector ) {
-  if( supports3DTransforms ) {
-
-    var nodes = document.querySelectorAll( selector );
-
-    for( var i = 0, len = nodes.length; i &lt; len; i++ ) {
-      var node = nodes[i];
-
-      if( !node.className ) {
-        node.className += ' roll';
-      }
+                <section>
+                    <h2>Rivets.js</h2>
+                    <p>Source code: Template</p>
+                    <pre><code class="html" data-trim contenteditable style="font-size: 16px;">
+<p>First Name: <input type="text" rv-value="model:firstName"/></p>
+<p>Last Name: <input type="text" rv-value="model:lastName"/></p>
+<p>Full Name: <span rv-text="view.fullName < model:firstName model:lastName"></span></p></code></pre>
+                    <p>Source code: View and Model</p>
+                    <pre><code class="javascript" data-trim contenteditable style="font-size: 16px;">
+var RivetsView = Backbone.View.extend({
+    template: $("script[type='text/template']").html(),
+    fullName: function() {
+        return this.model.get("firstName") + " " + this.model.get("lastName");
+    },
+    render: function () {
+        this.$el.html(this.template);
+        rivets.bind(this.$el, { model: this.model, view: this });
+        return this;
     }
-  }
-}
-					</code></pre>
-					<p>Courtesy of <a href="http://softwaremaniacs.org/soft/highlight/en/description/">highlight.js</a>.</p>
-				</section>
+});
 
-				<section>
-					<h2>Intergalactic Interconnections</h2>
-					<p>
-						You can link between slides internally,
-						<a href="#/2/3">like this</a>.
-					</p>
-				</section>
+var model = new Backbone.Model({firstName: "Luke", lastName: "Skywalker"}),
+    view = new RivetsView({model: model, el: $("#container")});
 
-				<section>
-					<section id="fragments">
-						<h2>Fragmented Views</h2>
-						<p>Hit the next arrow...</p>
-						<p class="fragment">... to step through ...</p>
-						<ol>
-							<li class="fragment"><code>any type</code></li>
-							<li class="fragment"><em>of view</em></li>
-							<li class="fragment"><strong>fragments</strong></li>
-						</ol>
+view.render();</code></pre>
+                </section>
 
-						<aside class="notes">
-							This slide has fragments which are also stepped through in the notes window.
-						</aside>
-					</section>
-					<section>
-						<h2>Fragment Styles</h2>
-						<p>There's a few styles of fragments, like:</p>
-						<p class="fragment grow">grow</p>
-						<p class="fragment shrink">shrink</p>
-						<p class="fragment roll-in">roll-in</p>
-						<p class="fragment fade-out">fade-out</p>
-						<p class="fragment highlight-red">highlight-red</p>
-						<p class="fragment highlight-green">highlight-green</p>
-						<p class="fragment highlight-blue">highlight-blue</p>
-						<p class="fragment current-visible">current-visible</p>
-						<p class="fragment highlight-current-blue">highlight-current-blue</p>
-					</section>
-				</section>
+                <section>
+                    <h2>Rivets.js</h2>
+                    <p>Source code: Backbone adapter</p>
+                    <pre><code class="javascript" data-trim contenteditable style="font-size: 16px;">
+rivets.adapters[':'] = {
+    observe: function(obj, keypath, callback) {
+        obj.on('change:' + keypath, callback)
+    },
+    unobserve: function(obj, keypath, callback) {
+        obj.off('change:' + keypath, callback)
+    },
+    get: function(obj, keypath) {
+        return obj.get(keypath)
+    },
+    set: function(obj, keypath, value) {
+        obj.set(keypath, value)
+    }
+};</code></pre>
+                </section>
 
-				<section>
-					<h2>Spectacular image!</h2>
-					<a class="image" href="http://lab.hakim.se/meny/" target="_blank">
-						<img width="320" height="299" src="http://s3.amazonaws.com/hakim-static/portfolio/images/meny.png" alt="Meny">
-					</a>
-				</section>
+                <section class="fragment">
+                    <h2>Rivets.js</h2>
+                    <table class="plusesAndMinusesTable">
+                        <thead>
+                        <tr>
+                            <th style="text-align: center; border: none;">+</th>
+                            <th style="text-align: center; border: none;">-</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td style="vertical-align: top;">
+                                <ul>
+                                    <li class="fragment">Активно развивается, последний коммит - 5 дней назад</li>
+                                    <li class="fragment">Может использоваться как с event-driven моделями других JavaScript фреймворками (например, Stapes.js), так и с обычными JavaScript объектами</li>
+                                    <li class="fragment">Computed свойства</li>
+                                    <li class="fragment">Возможность форматирования и конвертирования</li>
+                                    <li class="fragment">Поддержка коллекций</li>
+                                    <li class="fragment">Прост в освоении</li>
+                                </ul>
+                            </td>
+                            <td style="vertical-align: top;">
+                                <ul>
+                                    <li class="fragment">Для поддержки моделей и коллекций из определенного фреймворка необходимо написать адаптер</li>
+                                    <li class="fragment">Дополнительная прослойка Sightglass для поддержки Observable</li>
+                                    <li class="fragment">Все кастомные биндинги можно объявлять только глобально</li>
+                                    <li class="fragment">IE8 не поддерживается</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </section>
 
-				<section>
-					<h2>Export to PDF</h2>
-					<p>Presentations can be <a href="https://github.com/hakimel/reveal.js#pdf-export">exported to PDF</a>, below is an example that's been uploaded to SlideShare.</p>
-					<iframe id="slideshare" src="http://www.slideshare.net/slideshow/embed_code/13872948" width="455" height="356" style="margin:0;overflow:hidden;border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen> </iframe>
-					<script>
-						document.getElementById('slideshare').attributeName = 'allowfullscreen';
-					</script>
-				</section>
+                <section>
+                    <h2>Knockback.js</h2>
+                    <p>Source code: Template</p>
+                    <pre><code class="html" data-trim contenteditable style="font-size: 16px;">
+<p>First Name: <input type="text" data-bind="value: firstName, valueUpdate: 'keyup'" /></p>
+<p>Last Name: <input type="text" data-bind="value: lastName, valueUpdate: 'keyup'" /></p>
+<p>Full Name: <span data-bind="text: fullName"></span></p></code></pre>
+                    <p>Source code: Model and ViewModel</p>
+                    <pre><code class="javascript" data-trim contenteditable style="font-size: 16px;">
+var KnockbackViewModel = function(model) {
+    this.firstName = kb.observable(model, 'firstName');
+    this.lastName = kb.observable(model, 'lastName');
+    this.fullName = ko.computed((function() {
+        return "" + (this.firstName()) + " " + (this.lastName());
+    }), this);
+};
 
-				<section>
-					<h2>Take a Moment</h2>
-					<p>
-						Press b or period on your keyboard to enter the 'paused' mode. This mode is helpful when you want to take distracting slides off the screen
-						during a presentation.
-					</p>
-				</section>
+var model = new Backbone.Model({ firstName: "Luke", lastName: "Skywalker" }),
+    viewModel = new KnockbackViewModel(model);
 
-				<section>
-					<h2>Stellar Links</h2>
-					<ul>
-						<li><a href="http://slid.es">Try the online editor</a></li>
-						<li><a href="https://github.com/hakimel/reveal.js">Source code on GitHub</a></li>
-						<li><a href="http://twitter.com/hakimel">Follow me on Twitter</a></li>
-					</ul>
-				</section>
+$('#container').html($("script[type='text/template']").html());
+ko.applyBindings(viewModel, $('#container')[0]);</code></pre>
+                </section>
 
-				<section>
-					<h1>THE END</h1>
-					<h3>BY Hakim El Hattab / hakim.se</h3>
-				</section>
+                <section class="fragment">
+                    <h2>Knockback.js</h2>
+                    <table class="plusesAndMinusesTable">
+                        <thead>
+                        <tr>
+                            <th style="text-align: center; border: none;">+</th><th style="text-align: center; border: none;">-</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td style="vertical-align: top;">
+                                <ul>
+                                    <li class="fragment">Активно развивается, последний коммит - 15 дней назад</li>
+                                    <li class="fragment">Умеет все, что умеет Knockout.js</li>
+                                    <li class="fragment">Поддержка различных Backbone.js плагинов для nested моделей (BackboneORM, Backbone-Relational etc.)</li>
+                                </ul>
+                            </td>
+                            <td style="vertical-align: top;">
+                                <ul>
+                                    <li class="fragment">От самого Backbone.js остаются только Model и Router</li>
+                                    <li class="fragment">Зависимость сразу от двух больших фреймворков</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </section>
 
 			</div>
 

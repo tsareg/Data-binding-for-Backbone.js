@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Backbone.DataBinding Sample</title>
+    <script src="../bower_components/jquery/dist/jquery.js"></script>
+    <script src="../bower_components/underscore/underscore.js"></script>
+    <script src="../bower_components/backbone/backbone.js"></script>
+    <script src="../bower_components/backbone.databinding/dist/backbone.databinding.js"></script>
+    <script type="text/template">
+        <p>First Name: <input type="text" name="firstName"/></p>
+        <p>Last Name: <input type="text" name="lastName"/></p>
+        <p>Full Name: <span id="firstName"></span> <span id="lastName"></span></p>
+    </script>
+</head>
+<body>
+    <div id="container"></div>
+
+    <script>
+        var DataBindingView = Backbone.View.extend({
+            template: $("script[type='text/template']").html(),
+
+            render: function() {
+                this.$el.html(this.template);
+                return this;
+            }
+        });
+
+        var model = new Backbone.Model({ firstName: "Luke", lastName: "Skywalker" }),
+            view = new DataBindingView({ model: model, el: $("#container") }),
+            modelBinder = new Backbone.ModelBinder(view, model);
+
+        modelBinder.watch('value: firstName', { selector: '[name="firstName"]' });
+        modelBinder.watch('text: firstName', { selector: '#firstName' });
+        modelBinder.watch('value: lastName', { selector: '[name="lastName"]' });
+        modelBinder.watch('text: lastName', { selector: '#lastName' });
+
+        view.render();
+    </script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Epoxy.js Sample</title>
+    <script src="../bower_components/jquery/dist/jquery.js"></script>
+    <script src="../bower_components/underscore/underscore.js"></script>
+    <script src="../bower_components/backbone/backbone.js"></script>
+    <script src="../bower_components/backbone.epoxy/backbone.epoxy.js"></script>
+    <script type="text/template">
+        <p>First Name: <input type="text" data-bind="value:firstName,events:['keyup']"/></p>
+        <p>Last Name: <input type="text" data-bind="value:lastName,events:['keyup']"/></p>
+        <p>Full Name: <span data-bind="html:fullNameDisplay"></span></p>
+    </script>
+</head>
+<body>
+    <div id="container"></div>
+
+    <script>
+        var EpoxyView = Backbone.Epoxy.View.extend({
+            template: $("script[type='text/template']").html(),
+
+            computeds: {
+                fullNameDisplay: function() {
+                    return this.getBinding("firstName") + " " + this.getBinding("lastName");
+                }
+            },
+
+            render: function() {
+                this.$el.html(this.template);
+                this.applyBindings();
+                return this;
+            }
+        });
+
+        var model = new Backbone.Model({ firstName: "Luke", lastName: "Skywalker" }),
+            view = new EpoxyView({ model: model, el: $("#container") });
+
+        view.render();
+    </script>
+</body>
+</html>
