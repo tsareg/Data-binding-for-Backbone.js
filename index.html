@@ -116,12 +116,10 @@
 
 				<section style="top: -450px !important;">
                     <h2>Vanilla Backbone.js</h2>
-                    <p>Source code: Template</p>
                     <pre><code class="html" data-trim contenteditable style="font-size: 16px;">
 <p>First Name: <input type="text" id="firstName" value="<%- firstName %>"/></p>
 <p>Last Name: <input type="text" id="lastName" value="<%- lastName %>"/></p>
 <p>Full Name: <%- firstName %> <%- lastName %></p></code></pre>
-                    <p>Source code: View and Model</p>
                     <pre><code data-trim contenteditable class="javascript" style="max-height: 800px; font-size: 16px;">
 var FullNameView = Backbone.View.extend({
     template: _.template($("script[type='text/template']").html()),
@@ -187,13 +185,11 @@ view.render();</code></pre>
 
 				<section>
 					<h2>KnockoutJS</h2>
-                    <p>Source code: View</p>
-					<pre><code class="html" data-trim contenteditable>
+                    <pre><code class="html" data-trim contenteditable>
 <p>First Name: <input data-bind="value: firstName" /></p>
 <p>Last Name: <input data-bind="value: lastName" /></p>
 <p>Full Name: <span data-bind="text: firstName"></span>
     <span data-bind="text: lastName"></span></p></code></pre>
-                    <p>Source code: View Model</p>
                     <pre><code class="javascript" data-trim contenteditable>
 var ViewModel = function(first, last) {
     this.firstName = ko.observable(first);
@@ -205,7 +201,6 @@ ko.applyBindings(new ViewModel("Luke", "Skywalker"));</code></pre>
 
 				<section>
                     <h2>AngularJS</h2>
-                    <p>Source code: Template</p>
                     <pre><code class="html" data-trim contenteditable>
 <div ng-app>
     <div ng-controller="ctrlName">
@@ -214,7 +209,6 @@ ko.applyBindings(new ViewModel("Luke", "Skywalker"));</code></pre>
         <p>Full Name: {{firstName}} {{lastName}}</p>
     </div>
 </div></code></pre>
-                    <p>Source code: Controller</p>
                     <pre><code class="javascript" data-trim contenteditable>
 function ctrlName($scope) {
     $scope.firstName = "Luke";
@@ -237,13 +231,11 @@ function ctrlName($scope) {
 
                 <section>
                     <h2>Backbone.ModelBinding</h2>
-                    <p>Source code: Template</p>
                     <pre><code class="html" data-trim contenteditable style="font-size: 16px;">
 <p>First Name: <input type="text" id="firstName"/></p>
 <p>Last Name: <input type="text" id="lastName"/></p>
 <p>Full Name: <span data-bind="text firstName"></span>
     <span data-bind="text lastName"></span></p></code></pre>
-                    <p>Source code: View and Model</p>
                     <pre><code data-trim contenteditable class="javascript" style="max-height: 800px; font-size: 16px;">
 var ModelBindingView = Backbone.View.extend({
     template: $("script[type='text/template']").html(),
@@ -288,12 +280,10 @@ view.render();</code></pre>
 
                 <section>
 					<h2>Backbone.ModelBinder</h2>
-                    <p>Source code: Template</p>
                     <pre><code class="html" data-trim contenteditable style="font-size: 16px;">
 <p>First Name: <input type="text" name="firstName"/></p>
 <p>Last Name: <input type="text" name="lastName"/></p>
 <p>Full Name: <span name="firstName"></span> <span name="lastName"></span></p></code></pre>
-                    <p>Source code: View and Model</p>
                     <pre><code data-trim contenteditable class="javascript" style="max-height: 800px; font-size: 16px;">
 var ModelBinderView = Backbone.View.extend({
     template: $("script[type='text/template']").html(),
@@ -346,12 +336,10 @@ view.render();</code></pre>
 
 				<section>
 					<h2>Backbone.DataBinding</h2>
-                    <p>Source code: Template</p>
                     <pre><code class="html" data-trim contenteditable style="font-size: 16px;">
 <p>First Name: <input type="text" name="firstName"/></p>
 <p>Last Name: <input type="text" name="lastName"/></p>
 <p>Full Name: <span id="firstName"></span> <span id="lastName"></span></p></code></pre>
-                    <p>Source code: View and Model</p>
                     <pre><code data-trim contenteditable class="javascript" style="max-height: 800px; font-size: 16px;">
 var DataBindingView = Backbone.View.extend({
     template: $("script[type='text/template']").html(),
@@ -405,12 +393,10 @@ view.render();</code></pre>
 
                 <section>
                     <h2>Backbone.Stickit</h2>
-                    <p>Source code: Template</p>
                     <pre><code class="html" data-trim contenteditable style="font-size: 16px;">
 <p>First Name: <input type="text" name="firstName"/></p>
 <p>Last Name: <input type="text" name="lastName"/></p>
 <p>Full Name: <span id="fullName"></span></p></code></pre>
-                    <p>Source code: View and Model</p>
                     <pre><code data-trim contenteditable class="javascript" style="max-height: 800px; font-size: 16px;">
 var StickitView = Backbone.View.extend({
     template: $("script[type='text/template']").html(),
@@ -468,12 +454,10 @@ view.render();</code></pre>
 
 				<section>
 					<h2>Epoxy.js</h2>
-                    <p>Source code: Template</p>
                     <pre><code class="html" data-trim contenteditable style="font-size: 16px;">
 <p>First Name: <input type="text" data-bind="value:firstName,events:['keyup']"/></p>
 <p>Last Name: <input type="text" data-bind="value:lastName,events:['keyup']"/></p>
 <p>Full Name: <span data-bind="html:fullNameDisplay"></span></p></code></pre>
-                    <p>Source code: View and Model</p>
                     <pre><code contenteditable data-trim class="javascript" style="max-height: 800px; font-size: 16px;">
 var EpoxyView = Backbone.Epoxy.View.extend({
     template: $("script[type='text/template']").html(),
@@ -529,12 +513,10 @@ view.render();</code></pre>
 
                 <section>
                     <h2>Rivets.js</h2>
-                    <p>Source code: Template</p>
                     <pre><code class="html" data-trim contenteditable style="font-size: 16px;">
 <p>First Name: <input type="text" rv-value="model:firstName"/></p>
 <p>Last Name: <input type="text" rv-value="model:lastName"/></p>
 <p>Full Name: <span rv-text="view.fullName < model:firstName model:lastName"></span></p></code></pre>
-                    <p>Source code: View and Model</p>
                     <pre><code class="javascript" data-trim contenteditable style="font-size: 16px;">
 var RivetsView = Backbone.View.extend({
     template: $("script[type='text/template']").html(),
@@ -556,7 +538,6 @@ view.render();</code></pre>
 
                 <section>
                     <h2>Rivets.js</h2>
-                    <p>Source code: Backbone adapter</p>
                     <pre><code class="javascript" data-trim contenteditable style="font-size: 16px;">
 rivets.adapters[':'] = {
     observe: function(obj, keypath, callback) {
@@ -610,12 +591,10 @@ rivets.adapters[':'] = {
 
                 <section>
                     <h2>Knockback.js</h2>
-                    <p>Source code: Template</p>
                     <pre><code class="html" data-trim contenteditable style="font-size: 16px;">
 <p>First Name: <input type="text" data-bind="value: firstName, valueUpdate: 'keyup'" /></p>
 <p>Last Name: <input type="text" data-bind="value: lastName, valueUpdate: 'keyup'" /></p>
 <p>Full Name: <span data-bind="text: fullName"></span></p></code></pre>
-                    <p>Source code: Model and ViewModel</p>
                     <pre><code class="javascript" data-trim contenteditable style="font-size: 16px;">
 var KnockbackViewModel = function(model) {
     this.firstName = kb.observable(model, 'firstName');
