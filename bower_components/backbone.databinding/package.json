@@ -1,0 +1,63 @@
+{
+    "name": "backbone.databinding",
+    "title": "Backbone.DataBinding",
+    "version": "0.4.5",
+    "description": "The plugin implements a two-way data binding between views and models/collections.",
+
+    "keywords": [
+        "backbone",
+        "binding",
+        "collection",
+        "data",
+        "model",
+        "plugin",
+        "view"
+    ],
+
+    "homepage": "https://github.com/DreamTheater/Backbone.DataBinding",
+
+    "bugs": {
+        "url": "https://github.com/DreamTheater/Backbone.DataBinding/issues"
+    },
+
+    "author": {
+        "name": "Dmytro Nemoga",
+        "url": "https://github.com/DreamTheater"
+    },
+
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DreamTheater/Backbone.DataBinding.git"
+    },
+
+    "license": {
+        "type": "MIT",
+        "url": "https://github.com/DreamTheater/Backbone.DataBinding/blob/master/LICENSE"
+    },
+
+    "scripts": {
+        "pretest": "./node_modules/.bin/grunt jshint concat uglify",
+        "test": "./node_modules/.bin/grunt karma && ./node_modules/.bin/mocha test/**/*.test.js"
+    },
+
+    "dependencies": {
+        "backbone": "~1.1.0",
+        "underscore": "~1.5.2"
+    },
+
+    "devDependencies": {
+        "chai": "~1.8.1",
+        "grunt": "~0.4.1",
+        "grunt-cli": "~0.1.11",
+        "grunt-contrib-concat": "~0.3.0",
+        "grunt-contrib-jshint": "~0.7.1",
+        "grunt-contrib-uglify": "~0.2.7",
+        "grunt-karma": "~0.7.1",
+        "jsdom": "~0.8.8",
+        "karma-coverage": "~0.1.2",
+        "karma-mocha": "~0.1.0",
+        "mocha": "~1.14.0",
+        "sinon": "~1.7.3",
+        "sinon-chai": "~2.4.0"
+    }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "backbone.databinding",
+  "homepage": "https://github.com/dnemoga/Backbone.DataBinding",
+  "_release": "c460298eb5",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "c460298eb59a21eedeb04762dfda445d357150b2"
+  },
+  "_source": "git://github.com/dnemoga/Backbone.DataBinding.git",
+  "_target": "*",
+  "_originalSource": "git://github.com/dnemoga/Backbone.DataBinding.git"
+}

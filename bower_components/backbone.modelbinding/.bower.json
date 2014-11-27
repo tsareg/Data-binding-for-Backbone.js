@@ -1,0 +1,15 @@
+{
+  "name": "backbone.modelbinding",
+  "homepage": "https://github.com/derickbailey/backbone.modelbinding",
+  "version": "0.5.0",
+  "_release": "0.5.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.5.0",
+    "commit": "fce1b94d6a9882307229f6b487950a9b61139602"
+  },
+  "_source": "git://github.com/derickbailey/backbone.modelbinding.git",
+  "_target": "~0.5.0",
+  "_originalSource": "backbone.modelbinding",
+  "_direct": true
+}
